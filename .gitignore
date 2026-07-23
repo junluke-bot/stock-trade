@@ -5,3 +5,5 @@ venv/
 reports/*.md
 !reports/.gitkeep
 .DS_Store
+streamlit_log.txt
+.streamlit/

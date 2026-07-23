@@ -51,6 +51,8 @@ for market data — no paid APIs or API keys needed.
 
 ## Usage
 
+### CLI
+
 ```bash
 python main.py --ticker AAPL
 python main.py --ticker AAPL,NVDA,TSLA
@@ -61,6 +63,17 @@ python main.py --ticker AAPL --no-report     # skip writing the markdown report
 Output is a rich terminal table per ticker (one row per agent) followed by
 the portfolio manager's verdict panel. A markdown report is also written to
 `reports/{TICKER}_{YYYY-MM-DD}.md` unless `--no-report` is passed.
+
+### Web app
+
+```bash
+streamlit run app.py
+```
+
+Opens a local browser dashboard: enter one or more comma-separated tickers in
+the sidebar, click **Analyze**, and view the same agent panel/verdict as the
+CLI, with an option to show raw metrics, download the markdown report, or
+save it to `/reports`.
 
 ## Notes on data quality
 
@@ -76,10 +89,12 @@ as warnings in the terminal output and in the markdown report.
 
 ```
 main.py                    CLI entry point
+app.py                      Streamlit web dashboard
 data_layer/fetcher.py       yfinance wrapper: StockData dataclass, retries
 agents/base.py              InvestorAgent ABC + AgentSignal dataclass
 agents/*.py                 one module per investor persona
 agents/portfolio_manager.py synthesis agent (weights signals, surfaces disagreement)
 utils/metrics.py            shared math: CAGR, DCF, RSI, MACD, drawdown, etc.
+utils/report.py              shared markdown report builder (CLI + app)
 reports/                    generated markdown reports (gitignored)
 ```

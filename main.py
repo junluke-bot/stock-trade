@@ -17,6 +17,7 @@ from rich.table import Table
 from agents import ANALYST_AGENTS, AgentSignal, PortfolioManagerAgent, PortfolioVerdict
 from agents.risk_manager import RiskManagerAgent
 from data_layer import StockData, fetch_stock_data
+from utils.report import build_report_markdown
 
 REPORTS_DIR = Path(__file__).parent / "reports"
 
@@ -106,38 +107,7 @@ def render_verdict(console: Console, verdict: PortfolioVerdict) -> None:
 def write_markdown_report(data: StockData, signals: list[AgentSignal], verdict: PortfolioVerdict) -> Path:
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
     report_path = REPORTS_DIR / f"{data.ticker}_{date.today().isoformat()}.md"
-
-    lines = [
-        f"# {data.ticker} — {data.long_name}",
-        "",
-        f"*Generated {date.today().isoformat()}. Educational use only — not financial advice.*",
-        "",
-        "## Agent Panel",
-        "",
-        "| Agent | Signal | Confidence | Reasoning |",
-        "|---|---|---|---|",
-    ]
-    for sig in signals:
-        reasoning = sig.reasoning.replace("|", "\\|").replace("\n", " ")
-        lines.append(f"| {sig.investor_name} | {sig.signal.upper()} | {sig.confidence} | {reasoning} |")
-
-    lines += [
-        "",
-        "## Portfolio Manager Verdict",
-        "",
-        f"- **Overall signal:** {verdict.overall_signal.upper()}",
-        f"- **Conviction:** {verdict.conviction}/100",
-        f"- **Bull case:** {verdict.bull_case}",
-        f"- **Bear case:** {verdict.bear_case}",
-        f"- **Panel disagreement:** {verdict.disagreement_level.upper()} — {verdict.disagreement_detail}",
-        f"- **What would change this thesis:** {verdict.thesis_breaker}",
-    ]
-
-    if data.warnings:
-        lines += ["", "## Data Notes", ""]
-        lines += [f"- {w}" for w in data.warnings]
-
-    report_path.write_text("\n".join(lines), encoding="utf-8")
+    report_path.write_text(build_report_markdown(data, signals, verdict), encoding="utf-8")
     return report_path
 
 
