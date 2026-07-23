@@ -66,9 +66,17 @@ the portfolio manager's verdict panel. A markdown report is also written to
 
 ### Web app
 
+**Windows:** double-click `run_app.bat` — it starts the server in its own
+window and opens the dashboard in your default browser automatically.
+
+**Any platform:**
+
 ```bash
 streamlit run app.py
 ```
+
+(add `--server.port 8600` if the default port 8501 is blocked/reserved on
+your machine — Windows sometimes excludes it for other services)
 
 Opens a local browser dashboard: enter one or more comma-separated tickers in
 the sidebar, click **Analyze**, and view the same agent panel/verdict as the
